@@ -17,24 +17,24 @@ import com.tcc.taskmanager.infraestructure.output.jpa.repository.ITaskRepository
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
 public class BeanConfiguration {
-    private final IUserRepository userRepository;
-    private final IUserEntityMapper userEntityMapper;
-
-    private final ITaskRepository taskRepository;
-    private final ITaskEntityMapper taskEntityMapper;
 
     @Bean
-    public IUserPersistencePort userPersistencePort(){
-        return new UserJpaAdapter(userRepository, userEntityMapper);
+    public IUserPersistencePort userPersistencePort(
+        IUserRepository userRepository,
+        IUserEntityMapper userEntityMapper,
+        BCryptPasswordEncoder passwordEncoder
+    ) {
+        return new UserJpaAdapter(userRepository, userEntityMapper, passwordEncoder);
     }
 
     @Bean
-    public IUserServicePort userServicePort(){
-        return new UserUseCase(userPersistencePort());
+    public IUserServicePort userServicePort(IUserPersistencePort userPersistencePort){
+        return new UserUseCase(userPersistencePort);
     }
 
     @Bean

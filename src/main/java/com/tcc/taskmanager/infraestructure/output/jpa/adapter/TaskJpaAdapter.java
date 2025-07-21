@@ -1,6 +1,9 @@
 package com.tcc.taskmanager.infraestructure.output.jpa.adapter;
 
+import com.tcc.taskmanager.application.dtos.request.TaskFilterRequestDto;
 import com.tcc.taskmanager.domain.models.Task;
+import com.tcc.taskmanager.domain.models.TaskPriority;
+import com.tcc.taskmanager.domain.models.TaskStatus;
 import com.tcc.taskmanager.domain.spi.persistence.ITaskPersistencePort;
 import com.tcc.taskmanager.infraestructure.output.jpa.entity.TaskEntity;
 import com.tcc.taskmanager.infraestructure.output.jpa.entity.UserEntity;
@@ -9,8 +12,11 @@ import com.tcc.taskmanager.infraestructure.output.jpa.repository.ITaskRepository
 import com.tcc.taskmanager.infraestructure.output.jpa.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.time.LocalDate;
 
 @Component
 @RequiredArgsConstructor
@@ -67,5 +73,25 @@ public class TaskJpaAdapter implements ITaskPersistencePort {
     @Override
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Task> findTasksByFilters(TaskFilterRequestDto filters) {
+        try {
+            TaskStatus status = (filters.getStatus() != null && !filters.getStatus().isEmpty())
+                ? TaskStatus.valueOf(filters.getStatus()) : null;
+            TaskPriority priority = (filters.getPriority() != null && !filters.getPriority().isEmpty())
+                ? TaskPriority.valueOf(filters.getPriority()) : null;
+            LocalDate fromDate = (filters.getFromDate() != null && !filters.getFromDate().isEmpty())
+                ? LocalDate.parse(filters.getFromDate()) : null;
+            LocalDate toDate = (filters.getToDate() != null && !filters.getToDate().isEmpty())
+                ? LocalDate.parse(filters.getToDate()) : null;
+            return taskRepository.findByFilters(status, priority, fromDate, toDate)
+                .stream()
+                .map(taskEntityMapper::toDomain)
+                .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RuntimeException("Error al filtrar tareas", e);
+        }
     }
 } 

@@ -1,6 +1,7 @@
 package com.tcc.taskmanager.application.handler.impl;
 
 import com.tcc.taskmanager.application.dtos.request.TaskRequestDto;
+import com.tcc.taskmanager.application.dtos.request.TaskFilterRequestDto;
 import com.tcc.taskmanager.application.dtos.response.TaskResponseDto;
 import com.tcc.taskmanager.application.handler.ITaskHandler;
 import com.tcc.taskmanager.application.mapper.ITaskRequestMapper;
@@ -72,5 +73,24 @@ public class TaskHandlerImpl implements ITaskHandler {
     @Override
     public void deleteTask(Long id) {
         taskServicePort.deleteTask(id);
+    }
+
+    @Override
+    public List<TaskResponseDto> findTasksByFilters(TaskFilterRequestDto filters) {
+        return taskServicePort.findTasksByFilters(filters).stream().map(task -> {
+            TaskResponseDto dto = new TaskResponseDto();
+            dto.setId(task.getId());
+            dto.setTitle(task.getTitle());
+            dto.setDescription(task.getDescription());
+            dto.setCompleted(task.isCompleted());
+            dto.setDueDate(task.getDueDate());
+            dto.setStatus(task.getStatus());
+            dto.setPriority(task.getPriority());
+            if (task.getUserId() != null) {
+                User user = userServicePort.getUserById(task.getUserId());
+                dto.setUserName(user != null ? user.getName() : null);
+            }
+            return dto;
+        }).collect(Collectors.toList());
     }
 } 

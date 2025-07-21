@@ -1,6 +1,7 @@
 package com.tcc.taskmanager.infraestructure.input;
 
 import com.tcc.taskmanager.application.dtos.request.TaskRequestDto;
+import com.tcc.taskmanager.application.dtos.request.TaskFilterRequestDto;
 import com.tcc.taskmanager.application.dtos.response.TaskResponseDto;
 import com.tcc.taskmanager.application.handler.ITaskHandler;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,11 @@ public class TaskRestController {
     @GetMapping("/")
     public ResponseEntity<List<TaskResponseDto>> getAllTasks() {
         return ResponseEntity.ok(taskHandler.getAllTasks());
+    }
+
+    @PostMapping("/filter")
+    public ResponseEntity<List<TaskResponseDto>> filterTasks(@RequestBody TaskFilterRequestDto filters) {
+        return ResponseEntity.ok(taskHandler.findTasksByFilters(filters));
     }
 
     @PutMapping("/{id}")

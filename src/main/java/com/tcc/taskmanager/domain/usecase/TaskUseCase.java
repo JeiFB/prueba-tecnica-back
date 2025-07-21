@@ -1,5 +1,6 @@
 package com.tcc.taskmanager.domain.usecase;
 
+import com.tcc.taskmanager.application.dtos.request.TaskFilterRequestDto;
 import com.tcc.taskmanager.domain.api.ITaskServicePort;
 import com.tcc.taskmanager.domain.models.Task;
 import com.tcc.taskmanager.domain.spi.persistence.ITaskPersistencePort;
@@ -35,5 +36,10 @@ public class TaskUseCase implements ITaskServicePort {
     @Override
     public void deleteTask(Long id) {
         taskPersistencePort.deleteTask(id);
+    }
+
+    @Override
+    public List<Task> findTasksByFilters(TaskFilterRequestDto filters) {
+        return taskPersistencePort.findTasksByFilters(filters);
     }
 } 

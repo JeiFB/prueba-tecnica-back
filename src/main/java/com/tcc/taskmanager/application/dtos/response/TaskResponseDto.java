@@ -13,8 +13,8 @@ public class TaskResponseDto {
     private String title;
     private String description;
     private boolean completed;
-    private Long userId;
     private LocalDate dueDate;
     private TaskStatus status;
     private TaskPriority priority;
+    private String userName;
 } 

@@ -38,12 +38,16 @@ public class BeanConfiguration {
     }
 
     @Bean
-    public ITaskPersistencePort taskPersistencePort() {
-        return new TaskJpaAdapter(taskRepository, taskEntityMapper);
+    public ITaskPersistencePort taskPersistencePort(
+        ITaskRepository taskRepository,
+        ITaskEntityMapper taskEntityMapper,
+        IUserRepository userRepository
+    ) {
+        return new TaskJpaAdapter(taskRepository, taskEntityMapper, userRepository);
     }
 
     @Bean
-    public ITaskServicePort taskServicePort() {
-        return new TaskUseCase(taskPersistencePort());
+    public ITaskServicePort taskServicePort(ITaskPersistencePort taskPersistencePort) {
+        return new TaskUseCase(taskPersistencePort);
     }
 }

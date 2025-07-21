@@ -9,6 +9,8 @@ import com.tcc.taskmanager.domain.api.IUserServicePort;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -26,5 +28,12 @@ public class UserHandlerImpl implements IUserHandler {
     @Override
     public UserResponseDto getUserById(Long userId) {
         return iUserResponseMapper.toResponse(iUserServicePort.getUserById(userId));
+    }
+
+    @Override
+    public List<UserResponseDto> getAllUsers() {
+        return iUserServicePort.getAllUsers().stream()
+                .map(iUserResponseMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }

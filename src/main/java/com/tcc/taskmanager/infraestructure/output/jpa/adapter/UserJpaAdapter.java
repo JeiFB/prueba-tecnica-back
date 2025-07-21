@@ -7,6 +7,8 @@ import com.tcc.taskmanager.infraestructure.output.jpa.repository.IUserRepository
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import lombok.extern.log4j.Log4j2;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Component
@@ -22,5 +24,12 @@ public class UserJpaAdapter implements IUserPersistencePort {
     @Override
     public User getUserById(Long userId) {
         return iUserEntityMapper.toDomain(userRepository.getReferenceById(userId));
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(iUserEntityMapper::toDomain)
+                .collect(Collectors.toList());
     }
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,4 +23,10 @@ public class TaskEntity {
     private boolean completed;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long userId;
+    private LocalDate dueDate;
+    @Enumerated(EnumType.STRING)
+    private com.tcc.taskmanager.domain.models.TaskStatus status;
+    @Enumerated(EnumType.STRING)
+    private com.tcc.taskmanager.domain.models.TaskPriority priority;
 } 

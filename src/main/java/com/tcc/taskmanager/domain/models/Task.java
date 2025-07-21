@@ -1,5 +1,6 @@
 package com.tcc.taskmanager.domain.models;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Task {
@@ -9,6 +10,10 @@ public class Task {
     private boolean completed;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long userId;
+    private LocalDate dueDate;
+    private TaskStatus status;
+    private TaskPriority priority;
 
     // Getters y setters
     public Long getId() { return id; }
@@ -23,4 +28,12 @@ public class Task {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+    public LocalDate getDueDate() { return dueDate; }
+    public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
+    public TaskStatus getStatus() { return status; }
+    public void setStatus(TaskStatus status) { this.status = status; }
+    public TaskPriority getPriority() { return priority; }
+    public void setPriority(TaskPriority priority) { this.priority = priority; }
 }

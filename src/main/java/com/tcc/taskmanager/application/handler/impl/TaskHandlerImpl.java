@@ -3,6 +3,7 @@ package com.tcc.taskmanager.application.handler.impl;
 import com.tcc.taskmanager.application.dtos.request.TaskRequestDto;
 import com.tcc.taskmanager.application.dtos.request.TaskFilterRequestDto;
 import com.tcc.taskmanager.application.dtos.response.TaskResponseDto;
+import com.tcc.taskmanager.application.dtos.response.DashboardStatsDto;
 import com.tcc.taskmanager.application.handler.ITaskHandler;
 import com.tcc.taskmanager.application.mapper.ITaskRequestMapper;
 import com.tcc.taskmanager.domain.api.ITaskServicePort;
@@ -92,5 +93,10 @@ public class TaskHandlerImpl implements ITaskHandler {
             }
             return dto;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public DashboardStatsDto getDashboardStats() {
+        return taskServicePort.getDashboardStats();
     }
 } 

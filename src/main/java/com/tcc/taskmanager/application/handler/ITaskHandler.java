@@ -3,6 +3,7 @@ package com.tcc.taskmanager.application.handler;
 import com.tcc.taskmanager.application.dtos.request.TaskRequestDto;
 import com.tcc.taskmanager.application.dtos.response.TaskResponseDto;
 import com.tcc.taskmanager.application.dtos.request.TaskFilterRequestDto;
+import com.tcc.taskmanager.application.dtos.response.DashboardStatsDto;
 import java.util.List;
 
 public interface ITaskHandler {
@@ -12,4 +13,5 @@ public interface ITaskHandler {
     void updateTask(Long id, TaskRequestDto taskRequestDto);
     void deleteTask(Long id);
     List<TaskResponseDto> findTasksByFilters(TaskFilterRequestDto filters);
+    DashboardStatsDto getDashboardStats();
 } 

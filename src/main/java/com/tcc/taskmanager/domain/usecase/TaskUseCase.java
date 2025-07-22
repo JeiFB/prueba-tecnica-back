@@ -7,6 +7,8 @@ import com.tcc.taskmanager.domain.models.Task;
 import com.tcc.taskmanager.domain.models.TaskPriority;
 import com.tcc.taskmanager.domain.models.TaskStatus;
 import com.tcc.taskmanager.domain.spi.persistence.ITaskPersistencePort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -63,5 +65,10 @@ public class TaskUseCase implements ITaskServicePort {
         int completed = stats.getCompleted();
         stats.setCompletionPercentage(total > 0 ? (completed * 100) / total : 0);
         return stats;
+    }
+
+    @Override
+    public Page<Task> searchByTitle(String searchTerm, Pageable pageable) {
+        return taskPersistencePort.searchByTitle(searchTerm, pageable);
     }
 } 

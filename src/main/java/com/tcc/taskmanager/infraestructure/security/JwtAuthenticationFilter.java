@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
+import static com.tcc.taskmanager.infraestructure.security.SecurityConstants.HEADER_AUTHORIZATION;
+import static com.tcc.taskmanager.infraestructure.security.SecurityConstants.TOKEN_PREFIX;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -22,9 +24,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String header = request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
+        String header = request.getHeader(HEADER_AUTHORIZATION);
+        if (header != null && header.startsWith(TOKEN_PREFIX)) {
+            String token = header.substring(TOKEN_PREFIX.length());
             try {
                 String username = jwtUtil.extractUsername(token);
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

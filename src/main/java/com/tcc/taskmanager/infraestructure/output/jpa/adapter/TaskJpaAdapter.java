@@ -12,11 +12,13 @@ import com.tcc.taskmanager.infraestructure.output.jpa.repository.ITaskRepository
 import com.tcc.taskmanager.infraestructure.output.jpa.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import static com.tcc.taskmanager.application.util.AppConstants.DATE_FORMAT;
+import java.time.format.DateTimeFormatter;
 
 @Component
 @RequiredArgsConstructor
@@ -83,9 +85,9 @@ public class TaskJpaAdapter implements ITaskPersistencePort {
             TaskPriority priority = (filters.getPriority() != null && !filters.getPriority().isEmpty())
                 ? TaskPriority.valueOf(filters.getPriority()) : null;
             LocalDate fromDate = (filters.getFromDate() != null && !filters.getFromDate().isEmpty())
-                ? LocalDate.parse(filters.getFromDate()) : null;
+                ? LocalDate.parse(filters.getFromDate(), DateTimeFormatter.ofPattern(DATE_FORMAT)) : null;
             LocalDate toDate = (filters.getToDate() != null && !filters.getToDate().isEmpty())
-                ? LocalDate.parse(filters.getToDate()) : null;
+                ? LocalDate.parse(filters.getToDate(), DateTimeFormatter.ofPattern(DATE_FORMAT)) : null;
             return taskRepository.findByFilters(status, priority, fromDate, toDate)
                 .stream()
                 .map(taskEntityMapper::toDomain)
@@ -93,5 +95,11 @@ public class TaskJpaAdapter implements ITaskPersistencePort {
         } catch (Exception e) {
             throw new RuntimeException("Error al filtrar tareas", e);
         }
+    }
+
+    @Override
+    public Page<Task> searchByTitle(String searchTerm, Pageable pageable) {
+        return taskRepository.findByTitleContainingIgnoreCase(searchTerm, pageable)
+                .map(taskEntityMapper::toDomain);
     }
 } 

@@ -11,6 +11,8 @@ import com.tcc.taskmanager.domain.api.IUserServicePort;
 import com.tcc.taskmanager.domain.models.Task;
 import com.tcc.taskmanager.domain.models.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -98,5 +100,25 @@ public class TaskHandlerImpl implements ITaskHandler {
     @Override
     public DashboardStatsDto getDashboardStats() {
         return taskServicePort.getDashboardStats();
+    }
+
+    @Override
+    public Page<TaskResponseDto> searchByTitle(String searchTerm, Pageable pageable) {
+        return taskServicePort.searchByTitle(searchTerm, pageable)
+            .map(task -> {
+                TaskResponseDto dto = new TaskResponseDto();
+                dto.setId(task.getId());
+                dto.setTitle(task.getTitle());
+                dto.setDescription(task.getDescription());
+                dto.setCompleted(task.isCompleted());
+                dto.setDueDate(task.getDueDate());
+                dto.setStatus(task.getStatus());
+                dto.setPriority(task.getPriority());
+                if (task.getUserId() != null) {
+                    User user = userServicePort.getUserById(task.getUserId());
+                    dto.setUserName(user != null ? user.getName() : null);
+                }
+                return dto;
+            });
     }
 } 
